@@ -1,0 +1,14 @@
+---
+- name: Join cluster
+  shell: kubeadm join {{ api_address }}:6443 --token={{ hostvars['K8S_TOKEN_HOLDER']['token'] }} --discovery-token-ca-cert-hash sha256:{{ hostvars['K8S_TOKEN_HOLDER']['hash'] }}
+
+- name: Change Kubelet readonly port
+  lineinfile:
+    path: /var/lib/kubelet/config.yaml
+    line: 'readOnlyPort: 10255'
+
+- name: Restart Kubelet
+  systemd:
+    state: restarted
+    name: kubelet
+

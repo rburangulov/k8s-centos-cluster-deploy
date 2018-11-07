@@ -1,0 +1,24 @@
+---
+- name: Copy prom-node-exporter.yaml
+  copy:
+    src: "{{ role_path }}/files/prom-node-exporter.yaml"
+    dest: ~/prom-node-exporter.yaml
+
+- name: Install prometheus node exporter
+  command: kubectl apply -f ~/prom-node-exporter.yaml
+
+- name: Copy kube-state-metrics.yaml
+  copy:
+    src: "{{ role_path }}/files/kube-state-metrics.yaml"
+    dest: ~/kube-state-metrics.yaml
+
+- name: Install kube-state-metrics
+  command: kubectl apply -f ~/kube-state-metrics.yaml
+
+- name: Copy metrics-server.yaml
+  copy:
+    src: "{{ role_path }}/files/metrics-server.yaml"
+    dest: ~/metrics-server.yaml
+
+- name: Install metrics-server.yaml
+  command: kubectl apply -f ~/metrics-server.yaml

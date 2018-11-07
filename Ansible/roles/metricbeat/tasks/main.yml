@@ -1,0 +1,8 @@
+---
+- name: Copy metricbeat-kubernetes.yaml
+  template:
+    src: "{{ role_path }}/files/metricbeat-kubernetes.yaml"
+    dest: ~/metricbeat-kubernetes.yaml
+
+- name: Install metricbeat-kubernetes.yaml
+  command: kubectl apply -f ~/metricbeat-kubernetes.yaml

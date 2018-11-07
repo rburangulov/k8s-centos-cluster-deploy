@@ -1,0 +1,53 @@
+---
+- name: Create etcd directory
+  file: path=/etc/etcd state=directory
+
+- name: Create etcd directory
+  file: path=/var/lib/etcd state=directory
+
+- name: Transfer kubernetes.pem
+  synchronize:
+    src: /etc/etcd/kubernetes.pem
+    dest: /etc/etcd/kubernetes.pem
+  delegate_to: '{{ init_master }}'
+
+- name: Transfer kubernetes-key.pem
+  synchronize:
+    src: /etc/etcd/kubernetes-key.pem
+    dest: /etc/etcd/kubernetes-key.pem
+  delegate_to: '{{ init_master }}'
+
+- name: Transfer ca.pem
+  synchronize:
+    src: /etc/etcd/ca.pem
+    dest: /etc/etcd/ca.pem
+  delegate_to: '{{ init_master }}'
+
+- name: Download the etcd binaries
+  shell: wget https://github.com/coreos/etcd/releases/download/v3.3.9/etcd-v3.3.9-linux-amd64.tar.gz
+  args:
+    chdir: /root
+
+- name: Extract the etcd archive
+  shell: tar xvzf etcd-v3.3.9-linux-amd64.tar.gz
+  args:
+    chdir: /root
+
+- name: Move the etcd binaries to /usr/local/bin
+  shell: mv ~/etcd-v3.3.9-linux-amd64/etcd* /usr/local/bin/
+
+- name: Copy etcd.service
+  template:
+    src: "{{ role_path }}/files/etcd.service"
+    dest: /etc/systemd/system/etcd.service
+
+- name: Start etcd
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: etcd
+
+- name: Enable etcd
+  systemd:
+    name: etcd
+    enabled: yes

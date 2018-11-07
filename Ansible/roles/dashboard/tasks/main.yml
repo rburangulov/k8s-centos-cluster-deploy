@@ -1,0 +1,8 @@
+---
+- name: Copy kubernetes-dashboard.yaml 
+  copy:
+    src: "{{ role_path }}/files/kubernetes-dashboard.yaml"
+    dest: ~/kubernetes-dashboard.yaml 
+
+- name: Install dashboard
+  command: kubectl apply -f ~/kubernetes-dashboard.yaml 

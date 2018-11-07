@@ -1,0 +1,13 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: r.burangulov-deploy
+  namespace: dev
+subjects:
+- kind: User
+  name: https://dex.k8s.kadlab.local:32000/dex#r.burangulov 
+  apiGroup: ""
+roleRef:
+  kind: Role
+  name: deploy
+  apiGroup: ""

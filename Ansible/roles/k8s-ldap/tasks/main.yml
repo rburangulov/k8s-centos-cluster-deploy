@@ -1,0 +1,34 @@
+---
+- name: Create auth namespace
+  command: kubectl create ns auth
+
+- name: Create ssl directory
+  file:
+    path: "/home/{{ ansible_user }}/ssl"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: Copy cert.pem
+  copy:
+    src: "{{ role_path }}/files/cert.pem"
+    dest: ~/ssl/cert.pem
+
+- name: Copy key.pem
+  copy:
+    src: "{{ role_path }}/files/key.pem"
+    dest: ~/ssl/key.pem
+
+- name: Create secret tls
+  command: kubectl create secret tls login.k8s.kadlab.local.tls --cert=ssl/cert.pem --key=ssl/key.pem -n auth
+
+- name: Create secret tls
+  command: kubectl create secret tls dex.k8s.kadlab.local.tls --cert=ssl/cert.pem --key=ssl/key.pem -n auth
+
+- name: Copy loginapp.yml 
+  copy:
+    src: "{{ role_path }}/files/loginapp.yml"
+    dest: ~/loginapp.yml
+
+- name: Install dex
+  command: kubectl apply -f ~/loginapp.yml

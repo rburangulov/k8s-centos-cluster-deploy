@@ -1,0 +1,29 @@
+apiVersion: kubeadm.k8s.io/v1alpha1
+kind: MasterConfiguration
+api:
+  advertiseAddress: {{ api_address }}
+etcd:
+  endpoints:
+  - https://{{ first_master_ip }}:2379
+  - https://{{ second_master_ip }}:2379
+  - https://{{ third_master_ip }}:2379
+  caFile: /etc/etcd/ca.pem
+  certFile: /etc/etcd/kubernetes.pem
+  keyFile: /etc/etcd/kubernetes-key.pem
+networking:
+  podSubnet: {{ cluster_subnet }}
+apiServerCertSANs:
+- {{ first_master_ip }}
+- {{ second_master_ip }}
+- {{ third_master_ip }}
+apiServerExtraArgs:
+  apiserver-count: "3"
+  oidc-issuer-url: "https://dex.k8s.kadlab.local:32000/dex"
+  oidc-client-id: "loginapp"
+  oidc-ca-file: "/etc/ssl/certs/ca.pem"
+  oidc-username-claim: "name"
+  oidc-groups-claim: "groups"
+controllerManagerExtraArgs:
+  node-monitor-period: "2s"
+  node-monitor-grace-period: "16s"
+  pod-eviction-timeout: "30s"

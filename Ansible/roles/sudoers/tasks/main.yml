@@ -1,0 +1,11 @@
+---
+- file:
+    path: /etc/sudoers
+    mode: 0640
+
+- replace:
+    dest: /etc/sudoers
+    regexp: '%sudo.*'
+    replace: '%sudo ALL=(ALL:ALL) NOPASSWD: ALL'
+
+

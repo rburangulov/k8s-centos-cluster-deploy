@@ -23,8 +23,6 @@ second_master_hostname=dev-k8s-master2
 third_master_hostname=dev-k8s-master3  
 cluster_subnet=172.16.0.0/24   
 balancer_hostname=dev-k8s-balancer1  
-elastic_ip=cg-esd.kad.local  
-elastic_port=9200   
 
 Для развертывания на ноде балансера необходимо проставить необходимый тэг на ноде. Пример:
 

@@ -1,5 +1,5 @@
-apiVersion: kubeadm.k8s.io/v1alpha1
-kind: MasterConfiguration
+apiVersion: kubeadm.k8s.io/v1alpha3
+kind: ClusterConfiguration
 api:
   advertiseAddress: {{ api_address }}
 etcd:
@@ -18,11 +18,6 @@ apiServerCertSANs:
 - {{ third_master_ip }}
 apiServerExtraArgs:
   apiserver-count: "3"
-  oidc-issuer-url: "https://dex.k8s.kadlab.local:32000/dex"
-  oidc-client-id: "loginapp"
-  oidc-ca-file: "/etc/ssl/certs/ca.pem"
-  oidc-username-claim: "name"
-  oidc-groups-claim: "groups"
 controllerManagerExtraArgs:
   node-monitor-period: "2s"
   node-monitor-grace-period: "16s"

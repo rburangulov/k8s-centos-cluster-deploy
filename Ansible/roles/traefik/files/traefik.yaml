@@ -76,27 +76,6 @@ data:
       filePath = "/traefik-logs/access.log"
       format = "json"
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: filebeat-conf
-  namespace: kube-system
-data:
-  filebeat.yml: |
-    filebeat.prospectors:
-    - type: log
-      paths:
-        - "/traefik-logs/access.log"
-      json.keys_under_root: true
-      json.add_error_key: true
-    name: {{ balancer_hostname }}
-    output.elasticsearch:
-      hosts: ["{{ elastic_ip }}:{{ elastic_port }}"]
-      template.enabled: false
-      index: "traefik-%{+yyyy.MM.dd}"
-    setup.template.name: "traefik"
-    setup.template.pattern: "traefik-*"
----
 kind: DaemonSet
 apiVersion: extensions/v1beta1
 metadata:
@@ -159,14 +138,6 @@ spec:
         - --api
         - --kubernetes
         - --logLevel=INFO
-      - image: docker.elastic.co/beats/filebeat:6.0.1
-        name: traefik-filebeat
-        volumeMounts:
-        - mountPath: "/traefik-logs"
-          name: shared-logs
-        - mountPath: "/usr/share/filebeat/filebeat.yml"
-          subPath: "filebeat.yml"
-          name: "filebeat-conf"
 ---
 kind: Service
 apiVersion: v1

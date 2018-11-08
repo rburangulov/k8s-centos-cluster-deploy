@@ -1,18 +1,20 @@
 ---
-- name: Add an Apt signing key
-  apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
-- name: Install apt-transport-https
-  apt:
-        name: apt-transport-https
-        state: present
-- name: Add repository
-  apt_repository:
-        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
-        state: present
-- name: Install Docker
-  apt:
-        name: docker-ce=17.03.2~ce-0~ubuntu-xenial
-        state: present
-        update_cache: yes
+- name: Install requiered packages
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+
+- name: Add docker-ce repository
+  yum_repository:
+    name: docker-ce
+    description: docker-ce
+    baseurl: https://download.docker.com/linux/centos/docker-ce.repo 
+
+- name: Install docker-ce
+  yum:
+    name: docker-ce
+    state: present

@@ -1,28 +1,34 @@
 ---
-- name: Add an Apt signing key
-  apt_key:
-        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-        state: present
-- name: Install apt-transport-https
-  apt:
-        name: apt-transport-https
-        state: present
-- name: Add repository
-  apt_repository:
-        repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
-        state: present
-- name: Install Kubelet
-  apt:
-        name: kubelet
-        state: present
-        update_cache: yes
-- name: Install Kubeadm
-  apt:
-        name: kubeadm
-        state: present
-        update_cache: yes
-- name: Install Kubectl
-  apt:
-        name: kubectl
-        state: present
-        update_cache: yes
+- name: Copy kubernetes.repo
+  copy:
+    src: "{{ role_path }}/files/kubernetes.repo"
+    dest: /etc/yum.repos.d/kubernetes.repo
+
+- name: Set SELinux in permissive mode
+  command: setenforce 0
+
+- name: Change /etc/selinux/config
+  replace:
+    dest: /etc/selinux/config
+    regexp: '^SELINUX=enforcing$'
+    replace: 'SELINUX=permissive'
+
+- name: Install kubelet, kubeadm, kubectl
+  yum:
+    name: "{{ packages }}"
+    disable_excludes: kubernetes
+  vars:
+    packages:
+    - kubelet
+    - kubeadm
+    - kubectl
+
+- name: Start kubelet
+  systemd:
+    state: started
+    name: kubelet
+
+- name: Enable kubelet
+  systemd:
+    name: kubelet
+    enabled: yes

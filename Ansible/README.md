@@ -21,7 +21,7 @@ third_master_ip=172.16.0.56
 first_master_hostname=dev-k8s-master1  
 second_master_hostname=dev-k8s-master2  
 third_master_hostname=dev-k8s-master3  
-cluster_subnet=172.16.0.0/24 
+cluster_subnet=172.16.0.0/24   
 balancer_hostname=dev-k8s-balancer1  
 elastic_ip=cg-esd.kad.local  
 elastic_port=9200   
@@ -41,7 +41,3 @@ kubectl taint nodes dev-k8s-balancer1 type:NoSchedule-
 Для развертывания на ноде некоторых сервисов необходимо проставить необходимый тэг на ноде. Примеры тегов:
 
 kubectl label node dev-k8s-balancer1 dashboard=present
-
-kubectl label node dev-k8s-balancer1 dex=present
-
-kubectl label node dev-k8s-balancer1 loginapp=present

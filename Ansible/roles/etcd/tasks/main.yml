@@ -34,7 +34,7 @@
     chdir: /root
 
 - name: Move the etcd binaries to /usr/local/bin
-  shell: mv ~/etcd-v3.3.9-linux-amd64/etcd* /usr/local/bin/
+  shell: mv /root/etcd-v3.3.9-linux-amd64/etcd* /usr/local/bin/
 
 - name: Copy etcd.service
   template:

@@ -52,6 +52,8 @@
 
 - name: Install weavenet
   hosts: init-master
+  become: yes
+  become_method: sudo
   roles:
     - weavenet
 

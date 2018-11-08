@@ -2,7 +2,7 @@
 - name: Copy kubeadm-config
   template:
     src: "{{ role_path }}/files/kubeadm-config.yaml"
-    dest: ~/kubeadm-config.yaml
+    dest: /root/kubeadm-config.yaml
 
 - name: Copy ca.pem
   copy:
@@ -49,7 +49,7 @@
   delegate_to: '{{ init_master }}'
 
 - name: Init cluster
-  command: kubeadm init --config ~/kubeadm-config.yaml
+  command: kubeadm init --config /root/kubeadm-config.yaml
 
 - name: Create kube directory
   file:
@@ -63,5 +63,5 @@
 
 - file:
     path: "/root/.kube/config"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "root"
+    group: "root"

@@ -14,16 +14,16 @@
 
 - name: Create kube directory
   file: 
-    path: "/home/{{ ansible_user }}/.kube"
+    path: "/root/.kube"
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "root"
+    group: "root"
 
 - name: copy admin.conf file
-  command: "cp /etc/kubernetes/admin.conf /home/{{ ansible_user }}/.kube/config"
+  command: "cp /etc/kubernetes/admin.conf /root/.kube/config"
 
 - file:
-    path: "/home/{{ ansible_user }}/.kube/config"
+    path: "/root/.kube/config"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 

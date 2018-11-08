@@ -21,7 +21,6 @@ third_master_ip=172.16.0.56
 first_master_hostname=dev-k8s-master1  
 second_master_hostname=dev-k8s-master2  
 third_master_hostname=dev-k8s-master3  
-cluster_subnet=172.16.0.0/24   
 
 Для развертывания на ноде балансера необходимо проставить необходимый тэг на ноде. Пример:
 

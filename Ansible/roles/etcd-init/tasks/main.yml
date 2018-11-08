@@ -34,7 +34,7 @@
     dest: ~/kubernetes-csr.json
 
 - name: Generates certificates
-  shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -hostname=172.16.0.54,172.16.0.55,172.16.0.56,127.0.0.1,kubernetes.default -profile=kubernetes kubernetes-csr.json | cfssljson -bare kubernetes
+  shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -hostname={{ first_master_ip }},{{ second_master_ip }},{{ third_master_ip }},127.0.0.1,kubernetes.default -profile=kubernetes kubernetes-csr.json | cfssljson -bare kubernetes
   args:
     chdir: /root
 

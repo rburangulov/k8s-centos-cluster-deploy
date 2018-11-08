@@ -1,11 +1,10 @@
 ---
 
-- name: Change sudoers and disable swap
+- name: Disable swap
   hosts: all
   become: yes
   become_method: sudo
   roles:
-    - sudoers
     - swap
 
 - name: Prepare ssh

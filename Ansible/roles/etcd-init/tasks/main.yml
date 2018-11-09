@@ -47,6 +47,11 @@
 - name: Copy cetificates
   command: mv /root/ca.pem /root/kubernetes.pem /root/kubernetes-key.pem /etc/etcd
 
+- name: Install wget
+  yum:
+    name: wget
+    state: present
+
 - name: Download the etcd binaries
   shell: wget https://github.com/coreos/etcd/releases/download/v3.3.9/etcd-v3.3.9-linux-amd64.tar.gz
   args:

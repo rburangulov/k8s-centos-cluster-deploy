@@ -13,6 +13,7 @@ etcd:
     certFile: /etc/etcd/kubernetes.pem
     keyFile: /etc/etcd/kubernetes-key.pem
 apiServerCertSANs:
+- {{ api_address }}
 - {{ first_master_ip }}
 - {{ second_master_ip }}
 - {{ third_master_ip }}

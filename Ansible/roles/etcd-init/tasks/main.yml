@@ -6,11 +6,11 @@
   command: curl https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64 -o /usr/bin/cfssljson
 
 - file:
-    path: /usr/local/bin/cfssl
+    path: /usr/bin/cfssl
     mode: 0755
 
 - file:
-    path: /usr/local/bin/cfssljson
+    path: /usr/bin/cfssljson
     mode: 0755
 
 - name: Copy ca-config.json

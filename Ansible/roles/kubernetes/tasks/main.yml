@@ -4,6 +4,10 @@
     src: "{{ role_path }}/files/kubernetes.repo"
     dest: /etc/yum.repos.d/kubernetes.repo
 
+- name: Disable selinux
+  command: setenforce 0
+  ignore_errors: yes
+
 - name: Change /etc/selinux/config
   replace:
     dest: /etc/selinux/config

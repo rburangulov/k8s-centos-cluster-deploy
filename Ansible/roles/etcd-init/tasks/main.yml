@@ -57,8 +57,8 @@
   args:
     chdir: /root
 
-- name: Move the etcd binaries to /usr/local/bin
-  shell: mv /root/etcd-v3.3.9-linux-amd64/etcd* /usr/local/bin/
+- name: Move the etcd binaries to /usr/bin
+  shell: mv /root/etcd-v3.3.9-linux-amd64/etcd* /usr/bin/
 
 - name: Copy ca-config.json
   template:

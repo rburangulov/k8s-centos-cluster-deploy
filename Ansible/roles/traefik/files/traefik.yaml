@@ -96,9 +96,6 @@ spec:
       - name: traefik-conf
         configMap:
           name: traefik-conf
-      - name: filebeat-conf
-        configMap:
-          name: filebeat-conf
       - name: shared-logs
         emptyDir: {}
       tolerations:

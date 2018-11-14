@@ -1,8 +1,8 @@
-- name: Install dashboard, prometheus exporter, ingress
+- name: Install prometheus exporter, ingress, helm
   hosts: init-master
   become: yes
   become_method: sudo
   roles:
-    - dashboard
     - monitoring
     - traefik
+    - helm

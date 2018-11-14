@@ -1,0 +1,19 @@
+---
+- name: Download get_helm.sh
+  get_url:
+    url: https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
+    dest: /root/get_helm.sh
+    mode: 0440
+
+- name: Change permissions
+  file:
+    path: /root/get_helm.sh
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Install Helm
+  command: /root/get_helm.sh 
+
+- name: Helm init
+  command: helm init

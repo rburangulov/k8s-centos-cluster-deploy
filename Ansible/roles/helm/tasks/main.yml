@@ -24,4 +24,4 @@
   command: /root/get_helm.sh 
 
 - name: Helm init
-  command: helm init
+  command: helm init --service-account tiller

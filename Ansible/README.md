@@ -13,6 +13,7 @@
 172.16.0.58 ansible_user='administrator' ansible_sudo_pass='password'  
 172.16.0.59 ansible_user='administrator' ansible_sudo_pass='password'  
 [all:vars]  
+k8s_version=1.12.2-0  
 api_address=172.16.0.53  
 init_master=172.16.0.54  
 first_master_ip=172.16.0.54  

@@ -1,0 +1,17 @@
+- name: Get token from master
+  hosts: init-master
+  become: yes
+  become_method: sudo
+  roles:
+    - get-token
+
+- name: Add new worker to cluster
+  hosts: имя_хоста
+  become: yes
+  become_method: sudo
+  roles:
+    - swap
+    - docker
+    - kubernetes
+    - worker
+

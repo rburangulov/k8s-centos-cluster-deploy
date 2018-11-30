@@ -6,11 +6,12 @@
     - get-token
 
 - name: Add new worker to cluster
-  hosts: имя_хоста
+  hosts:
   become: yes
   become_method: sudo
   roles:
     - swap
+    - ntpdate
     - docker
     - kubernetes
     - worker

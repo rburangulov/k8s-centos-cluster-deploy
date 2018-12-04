@@ -1,0 +1,1 @@
+Деплой в k8s с помощью Ansible playbook

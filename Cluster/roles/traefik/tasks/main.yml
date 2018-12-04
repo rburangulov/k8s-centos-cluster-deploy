@@ -1,0 +1,8 @@
+---
+- name: Copy traefik.yaml
+  template:
+    src: "{{ role_path }}/files/traefik.yaml"
+    dest: /root/traefik.yaml
+
+- name: Install traefik
+  command: kubectl apply -f /root/traefik.yaml

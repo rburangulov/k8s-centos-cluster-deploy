@@ -1,0 +1,82 @@
+---
+- name: Install cfssl
+  command: curl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64 -o /usr/bin/cfssl
+
+- name: Install cfssljson
+  command: curl https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64 -o /usr/bin/cfssljson
+
+- file:
+    path: /usr/bin/cfssl
+    mode: 0755
+
+- file:
+    path: /usr/bin/cfssljson
+    mode: 0755
+
+- name: Copy ca-config.json
+  copy:
+    src: "{{ role_path }}/files/ca-config.json"
+    dest: /root/ca-config.json
+
+- name: Copy ca-csr.json
+  copy:
+    src: "{{ role_path }}/files/ca-csr.json"
+    dest: /root/ca-csr.json
+
+- name: Generates certificates
+  shell: cfssl gencert -initca ca-csr.json | cfssljson -bare ca
+  args:
+    chdir: /root
+
+- name: Copy kubernetes-csr.json
+  copy:
+    src: "{{ role_path }}/files/kubernetes-csr.json"
+    dest: /root/kubernetes-csr.json
+
+- name: Generates certificates
+  shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -hostname={{ first_master_ip }},{{ second_master_ip }},{{ third_master_ip }},127.0.0.1,kubernetes.default -profile=kubernetes kubernetes-csr.json | cfssljson -bare kubernetes
+  args:
+    chdir: /root
+
+- name: Create etcd directory
+  file: path=/etc/etcd state=directory
+
+- name: Create etcd directory
+  file: path=/var/lib/etcd state=directory
+
+- name: Copy cetificates
+  command: mv /root/ca.pem /root/kubernetes.pem /root/kubernetes-key.pem /etc/etcd
+
+- name: Download the etcd binaries
+  shell: wget https://github.com/coreos/etcd/releases/download/v3.3.9/etcd-v3.3.9-linux-amd64.tar.gz
+  args:
+    chdir: /root
+
+- name: Extract the etcd archive
+  shell: tar xvzf etcd-v3.3.9-linux-amd64.tar.gz
+  args:
+    chdir: /root
+
+- name: Move the etcd binaries to /usr/bin
+  shell: mv /root/etcd-v3.3.9-linux-amd64/etcd* /usr/bin/
+
+- name: Copy ca-config.json
+  template:
+    src: "{{ role_path }}/files/etcd.service"
+    dest: /etc/systemd/system/etcd.service
+
+- name: Start etcd
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: etcd
+
+- name: Enable etcd
+  systemd:
+    name: etcd
+    enabled: yes
+
+- file:
+    path: /etc/etcd
+    recurse: yes
+    mode: "o+r"

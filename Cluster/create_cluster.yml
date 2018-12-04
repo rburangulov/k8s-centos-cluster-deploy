@@ -1,0 +1,66 @@
+---
+
+- name: Disable swap
+  hosts: all
+  become: yes
+  become_method: sudo
+  roles:
+    - swap
+
+- name: Prepare ssh
+  hosts: all
+  roles:
+    - ssh-key
+
+- name: Install docker, kubernetes and additional programs
+  hosts: all
+  become: yes
+  become_method: sudo
+  roles:
+    - docker
+    - kubernetes
+    - required_po
+
+- name: Create etcd cluster
+  hosts: init-master
+  become: yes
+  become_method: sudo
+  roles:
+    - etcd-init
+
+- name: Add node to etcd cluster
+  hosts: master
+  become: yes
+  become_method: sudo
+  roles:
+    - etcd
+
+- name: Init cluster
+  hosts: init-master
+  become: yes
+  become_method: sudo
+  roles:
+    - master-init
+
+- name: Add masters to cluster
+  hosts: master
+  become: yes
+  become_method: sudo
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  roles:
+    - master
+
+- name: Install weavenet
+  hosts: init-master
+  become: yes
+  become_method: sudo
+  roles:
+    - weavenet
+
+- name: Add workes to cluster
+  hosts: worker
+  become: yes
+  become_method: sudo
+  roles:
+    - worker

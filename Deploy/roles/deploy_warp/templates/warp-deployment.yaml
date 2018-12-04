@@ -1,0 +1,46 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: warp-{{ release_name }}
+  namespace: {{ namespace }}
+  labels:
+    app: warp-{{ release_name }}
+spec:
+  replicas: {{ warp.replica_count }}
+  selector:
+    matchLabels:
+      app: warp-{{ release_name }}
+  template:
+    metadata:
+      labels:
+        app: warp-{{ release_name }}
+    spec:
+      containers:
+      - name: warp-{{ release_name }}
+        image: "{{ warp.image_name }}:{{ warp.image_tag }}"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8200
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8200
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8200
+        volumeMounts:
+        - name: {{ warp.env_configmap }}
+          mountPath: /opt/warp/.env
+          subPath: .env
+        resources:
+          limits:
+            memory: {{ warp.resources.limits.memory }}
+          requests:
+            memory: {{ warp.resources.requests.memory }}
+      imagePullSecrets:
+      - name: {{ registry_credential_secret }}
+      volumes:
+      - name: {{ warp.env_configmap }}
+        configMap:
+          name: {{ warp.env_configmap }}

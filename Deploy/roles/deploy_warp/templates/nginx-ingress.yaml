@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: warp-{{ release_name }}
+  namespace: {{ namespace }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: warp-{{ release_name }}
+spec:
+  rules:
+  - host: warp-{{ release_name }}.{{ warp_nginx.ingress_domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: warp-nginx-{{ release_name }}
+          servicePort: 80

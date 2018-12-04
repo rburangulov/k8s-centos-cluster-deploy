@@ -1,8 +1,0 @@
----
-- name: Copy weave-kube-1.6.yaml
-  copy:
-    src: "{{ role_path }}/files/weave-kube-1.6.yaml"
-    dest: /root/weave-kube-1.6.yaml
-
-- name: Install weavenet
-  command: kubectl apply -f /root/weave-kube-1.6.yaml

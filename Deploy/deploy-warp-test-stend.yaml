@@ -1,0 +1,6 @@
+- name: Deploy warp for pull request testing
+  hosts: localhost
+  roles:
+  - deploy_warp
+  vars_files:
+  - vars/test.yaml

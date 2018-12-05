@@ -7,9 +7,9 @@ warp:
   image_tag: "{{ release_name }}"
   resources:
     limits:
-      memory: 5Gi
+      memory: 4Gi
     requests:
-      memory: 5Gi
+      memory: 4Gi
   env_configmap: warp-test-env
 
 warp_nginx:
@@ -18,7 +18,7 @@ warp_nginx:
   image_tag: "{{ release_name }}"
   resources:
     limits:
-      memory: 2Gi
+      memory: 1Gi
     requests:
-      memory: 2Gi
+      memory: 1Gi
   ingress_domain: k8s.shot.x340.org

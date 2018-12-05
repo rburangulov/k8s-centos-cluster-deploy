@@ -36,8 +36,10 @@ spec:
         resources:
           limits:
             memory: {{ warp.resources.limits.memory }}
+            cpu: {{ warp.resources.limits.cpu }}
           requests:
             memory: {{ warp.resources.requests.memory }}
+            cpu: {{ warp.resources.limits.cpu }}
       imagePullSecrets:
       - name: {{ registry_credential_secret }}
       volumes:

@@ -8,8 +8,10 @@ warp:
   resources:
     limits:
       memory: 2Gi
+      cpu: 1000m
     requests:
       memory: 2Gi
+      cpu: 1000m
   env_configmap: warp-test-env
 
 warp_nginx:
@@ -19,6 +21,8 @@ warp_nginx:
   resources:
     limits:
       memory: 512Mi
+      cpu: 250m
     requests:
       memory: 512Mi
+      cpu: 250m
   ingress_domain: k8s.shot.x340.org

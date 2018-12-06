@@ -41,8 +41,10 @@ spec:
         resources:
           limits:
             memory: {{ warp_nginx.resources.limits.memory }}
+            cpu: {{ warp_nginx.resources.limits.cpu }}
           requests:
             memory: {{ warp_nginx.resources.requests.memory }}
+            cpu: {{ warp_nginx.resources.limits.cpu }}
       imagePullSecrets:
       - name: {{ registry_credential_secret }}
       volumes:

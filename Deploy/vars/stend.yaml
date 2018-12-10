@@ -1,5 +1,7 @@
 registry_credential_secret: shot-registry-credential
-release_name: stend
+dockerconfigjson: eyJhdXRocyI6eyJkb2NrZXItc2hvdC1yZWdpc3RyeS54MzQwLm9yZyI6eyJ1c2VybmFtZSI6InJlZ2lzdHJ5IiwicGFzc3dvcmQiOiJVYW1vaDl4YWlUIiwiZW1haWwiOiJidXJhbmd1bG92cmZAcHJvZmkucnUiLCJhdXRoIjoiY21WbmFYTjBjbms2VldGdGIyZzVlR0ZwVkE9PSJ9fX0=
+namespace: "profi-three-stands-{{ build_number }}"
+release_name: "{{ build_number }}"
 
 warp:
   replica_count: 1
@@ -26,3 +28,9 @@ warp_nginx:
       memory: 512Mi
       cpu: 250m
   ingress_domain: k8s.shot.x340.org
+
+warp_env:
+  warp_port: 8200
+  oauth_verify_token_url: http://10.26.0.15:3000/oauth/isAuthorized
+  php_sec_cookie_salt: 698d9cb931078eee1207dfb74ec05bf9
+

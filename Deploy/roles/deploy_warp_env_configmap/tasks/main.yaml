@@ -1,0 +1,4 @@
+- name: Deploy warp env configmap
+  k8s_raw:
+    state: present
+    definition: "{{ lookup('template', '{{ role_path }}/templates/env.yaml') | from_yaml }}"

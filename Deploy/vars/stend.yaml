@@ -1,6 +1,5 @@
 registry_credential_secret: shot-registry-credential
 release_name: stend
-local: "no"
 
 warp:
   replica_count: 1

@@ -1,0 +1,28 @@
+namespace: warp-pull-testing
+registry_credential_secret: shot-registry-credential
+
+warp:
+  replica_count: 1
+  image_name: docker-shot-registry.x340.org/warp
+  image_tag: "{{ release_name }}"
+  resources:
+    limits:
+      memory: 2Gi
+      cpu: 1000m
+    requests:
+      memory: 2Gi
+      cpu: 1000m
+  env_configmap: warp-test-env
+
+warp_nginx:
+  replica_count: 1
+  image_name: docker-shot-registry.x340.org/warp-nginx
+  image_tag: "{{ release_name }}"
+  resources:
+    limits:
+      memory: 512Mi
+      cpu: 250m
+    requests:
+      memory: 512Mi
+      cpu: 250m
+  ingress_domain: k8s.shot.x340.org

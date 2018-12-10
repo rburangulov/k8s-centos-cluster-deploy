@@ -9,7 +9,7 @@ metadata:
     app: warp-{{ release_name }}
 spec:
   rules:
-  - host: warp-{{ release_name }}.{{ warp_nginx.ingress_domain }}
+  - host: {{ release_name }}.warp.{{ warp_nginx.ingress_domain }}
     http:
       paths:
       - backend:

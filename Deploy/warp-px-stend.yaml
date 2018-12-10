@@ -52,7 +52,6 @@
 - name: Build and deploy warp
   hosts: localhost
   roles:
-  - build_warp
   - deploy_warp
   vars_files:
   - vars/stend.yaml

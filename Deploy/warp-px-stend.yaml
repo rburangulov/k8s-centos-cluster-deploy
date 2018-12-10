@@ -1,0 +1,58 @@
+- name: Prepare environment
+  hosts: localhost
+  vars_files:
+  - vars/stend.yaml
+  tasks:
+  - name: Create namespace
+    k8s:
+      name: "{{ namespace }}"
+      api_version: v1
+      kind: Namespace
+      state: present
+
+  - name: Get env configmap
+    k8s_facts:
+      api_version: v1
+      kind: ConfigMap
+      name: "{{ warp.env_configmap }}"
+      namespace: env-files
+    register: configmap
+
+  - name: Get docker registry secret
+    k8s_facts:
+      api_version: v1
+      kind: Secret
+      name: "{{ registry_credential_secret }}"
+      namespace: env-files
+    register: registry
+
+  - name: Deploy configmap to created namespace
+    k8s:
+      state: present
+      definition:
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: "{{ warp.env_configmap }}"
+          namespace: "{{ namespace }}"
+        data: "{{configmap.resources[0].data }}"
+
+  - name: Deploy secret to created namespace
+    k8s:
+      state: present
+      definition:
+        apiVersion: v1
+        kind: Secret
+        type: kubernetes.io/dockerconfigjson
+        metadata:
+          name: "{{ registry_credential_secret }}"
+          namespace: "{{ namespace }}"
+        data: "{{registry.resources[0].data }}"
+
+- name: Build and deploy warp
+  hosts: localhost
+  roles:
+  - build_warp
+  - deploy_warp
+  vars_files:
+  - vars/stend.yaml

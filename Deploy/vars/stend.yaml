@@ -1,10 +1,11 @@
-namespace: warp-pull-testing
 registry_credential_secret: shot-registry-credential
+release_name: stend
+local: "no"
 
 warp:
   replica_count: 1
   image_name: docker-shot-registry.x340.org/warp
-  image_tag: "{{ release_name }}"
+  image_tag: "{{ warp_image_tag }}"
   resources:
     limits:
       memory: 2Gi
@@ -12,12 +13,13 @@ warp:
     requests:
       memory: 2Gi
       cpu: 1000m
-  env_configmap: warp-test-env
+  env_configmap: warp-stend-env
+  source_dir: /home/ingles/Projects/warp
 
 warp_nginx:
   replica_count: 1
   image_name: docker-shot-registry.x340.org/warp-nginx
-  image_tag: "{{ release_name }}"
+  image_tag: "{{ warp_image_tag }}"
   resources:
     limits:
       memory: 512Mi

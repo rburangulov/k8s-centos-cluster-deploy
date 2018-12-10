@@ -12,8 +12,7 @@ warp:
     requests:
       memory: 2Gi
       cpu: 1000m
-  env_configmap: warp-stend-env
-  source_dir: /home/ingles/Projects/warp
+  env_configmap: warp-env
 
 warp_nginx:
   replica_count: 1

@@ -1,5 +1,6 @@
 namespace: warp-pull-testing
 registry_credential_secret: shot-registry-credential
+ingress_domain: k8s.shot.x340.org
 
 warp:
   replica_count: 1
@@ -25,4 +26,3 @@ warp_nginx:
     requests:
       memory: 512Mi
       cpu: 250m
-  ingress_domain: k8s.shot.x340.org

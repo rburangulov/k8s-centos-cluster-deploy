@@ -60,6 +60,9 @@ spec:
         - name: px-env-{{ release_name }}
           mountPath: /var/www/px-profi/env.php
           subPath: env.php
+        - name: px-api-{{ release_name }}
+          mountPath: /var/www/px-profi/protected/config/api.php
+          subPath: api.php
       - name: px-nginx-{{ release_name }}
         image: "{{ px_nginx.image_name }}:{{ px_nginx.image_tag }}"
         imagePullPolicy: IfNotPresent
@@ -110,3 +113,6 @@ spec:
       - name: px-fastcgi-{{ release_name }}
         configMap:
           name: px-fastcgi-{{ release_name }}
+      - name: px-api-{{ release_name }}
+        configMap:
+          name: px-api-{{ release_name }}

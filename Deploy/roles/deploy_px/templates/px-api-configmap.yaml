@@ -1,0 +1,207 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: px-api-{{ release_name }}
+  namespace: {{ namespace }}
+  labels:
+    app: px-{{ release_name }}
+data:
+  api.php: |
+    <?php
+    $seoCachedEnabled = !(isset($_GET['noseocache']) && (YII_DEBUG || $_GET['noseocache'] == 'uStcSZDh8HsUWVF'));
+    defined('WARP_NEAREST') or define('WARP_NEAREST', 'warp.nearest');
+    return array(
+        'WebDavCDN' => array(
+            'default' => array('dav_host' => 'http://dav.dev.px.x340.org:5285', 'user' => 'dav', 'password' => 'dav', 'cdn_host' => 'http://cdn.dev.px.x340.org'),
+        ),
+        'Hermes' => array(
+            'default' => array(
+                'gateway' => 'http://seo.mkt.x340.org:1000/seo/api/content',
+                'consumer' => 'px.profi',
+                'timeout' => 1,
+                'retries' => 2,
+                'cache_enabled' => $seoCachedEnabled,
+                'cache_ttl' => 86400,
+                'cache_first_ttl' => 900,
+                'no_success_logs_all' => true,
+            ),
+        ),
+        'Stat' => array(
+            'default' => array(
+                'host' => 'stats.hg.x340.org',
+                'port' => 18095,
+                'consumer' => 'profi',
+                'cache_ttl' => 86400,
+                'cache_first_ttl' => 3600,
+                'cache_enabled' => true,
+                'timeout' => 1,
+                'connectTimeout' => 1,
+                'retries' => 2,
+            ),
+        ),
+        'HiveProfiles' => array(
+            'default' => array(
+                'gateway' => 'http://10.26.0.15:18116/',
+                'consumer' => 'px.profi',
+                'timeout' => 5,
+                'retries' => 2,
+                'cache_enabled' => true,
+                'cache_ttl' => 86400,
+                'cache_first_ttl' => 600,
+                'method_cache_first_ttl' => array(
+                    'getSearchStats' => 3600,
+                    'getPservices' => 3600,
+                    'getRubrics' => 3600,
+                ),
+                'no_success_logs_all' => true,
+            ),
+        ),
+        'System' => array(
+            'default' => array(
+                'consumer' => 'test',
+                'salt' => 'salt',
+                'gateway' => 'http://repetitors.info.trunk.stend.x340.org/api/system/',
+                'cache_enabled' => false,
+                'timeout' => 15,
+                'retries' => 0,
+                'full_logs' => array(
+                    '_addNewOrder' => true,
+                ),
+            ),
+        ),
+        'Backoffice' => array(
+            'default' => array(
+                'consumer' => 'stend',
+                'salt' => '7miLomBzzt3z',
+                'gateway' => 'http://repetitors.info.trunk.stend.x340.org/api/backoffice/',
+                'cache_enabled' => true,
+                'cache_ttl' => 86400,
+                'cache_first_ttl' => 3600,
+                'timeout' => 1,
+                'retries' => 0,
+                'no_success_logs_all' => true,
+            ),
+        ),
+        'Emsender' => array(
+            'default' => array(
+                'consumer' => 'test',
+                'salt' => 'salt',
+                'gateway' => 'http://mail-api.x340.org/api/emsender/',
+                'cache_enabled' => false,
+                'timeout' => 15,
+                'retries' => 0
+            ),
+        ),
+        'Suggest' => array(
+           'default' => array(
+               'host' => 'suggest.hg.x340.org',
+               'port' => 18110,
+               'cache_enabled' => true,
+               'cache_ttl' => 86400,
+               'cache_first_ttl' => 3600,
+               'timeout' => 1,
+               'connectTimeout' => 1,
+               'retries' => 2,
+               'no_success_logs_all' => true,
+           ),
+        ),
+        'SmartSuggest' => array(
+            'default' => array(
+                'host' => 'suggest.hg.x340.org',
+                'port' => 18112,
+                'cache_enabled' => false,
+                'timeout' => 1,
+                'connectTimeout' => 1,
+                'retries' => 2,
+                'no_success_logs_all' => true,
+            ),
+        ),
+        'News' => array(
+            'default' => array(
+                'host' => 'news.hg.x340.org',
+                'port' => 18069,
+                'consumer' => 'px.profi',
+                'cache_enabled' => true,
+                'cache_first_ttl' => 3600,
+                'timeout' => 0.5,
+                'retries' => 2,
+            ),
+        ),
+        'OrderSearch' => array(
+            'default' => array(
+                'host' => 'api.ubi.x340.org',
+                'port' => 18074,
+                'cache_enabled' => true,
+                'cache_first_ttl' => 3600,
+                'timeout' => 5,
+                'retries' => array('Px\Lib\Hg\Clients\TimeoutException' => 2),
+            ),
+        ),
+        'Omen' => array(
+            'default' => array(
+                'gateway' => 'http://omen-trunk.regress.test.shot.x340.org:8117/',
+                'consumer' => 'px.profi',
+                'timeout' => 5,
+                'retries' => 2,
+                'cache_enabled' => true,
+                'cache_ttl' => 86400,
+                'cache_first_ttl' => 600,
+                'method_cache_first_ttl' => array(
+                    'getPrepStat' => 3600,
+                    'getReviewsAdaptive' => 3600,
+                    'getReviews' => 3600,
+                    'getAssignmentOrderMini' => 6,
+                    'getAssignmentOrder' => 6,
+                    'savePollResults' => 0,
+                    'getAbVariantFromKlops' => 0,
+                    'addMoreSKPreps' => 0,
+                    'revokePrepFromOrder' => 0
+                ),
+                'no_success_logs' => array(
+                    '_getAssignmentOrder' => true,
+                    '_getAssignmentOrderMini' => true,
+                    '_getReviewsAdaptive' => true,
+                    '_getPagedLandingCities' => true,
+                    '_getPrepStat' => true,
+                    '_getReviews' => true,
+                    '_getLandingOrder' => true,
+                    '_getSimilarLandingOrders' => true,
+                    '_getPagedLandingOrders' => true,
+                    '_addMoreSKPreps' => true,
+                    '_getAbVariantFromKlops' => true,
+                )
+            ),
+        ),
+        'Profile' => array(
+            'default' => array(
+                'host' => 'provisioning.ubi.x340.org',
+                'cache_enabled' => false,
+                'connectTimeout' => 1,
+                'port' => 19002,
+                'timeout' => 60,
+                'appointment' => 'appointment://vr.prep:test.repetitors.info@production', // тестовый урл для регистрации через букинг
+            ),
+        ),
+        'WarpPages' => array(
+            'default' => array(
+                'gateway' => 'http://'.WARP_NEAREST.':8200',
+                'timeout' => 5,
+                'retries' => 2,
+                'cache_enabled' => false,
+                'cache_ttl' => 86400,
+                'cache_first_ttl' => 600,
+                'no_success_logs_all' => true,
+            ),
+        ),
+        'WarpGQL' => array(
+            'default' => array(
+                'gateway' => 'http://'.WARP_NEAREST.':8200/graphql',
+                'consumer' => 'px.profi',
+                'timeout' => 5,
+                'retries' => 2,
+                'cache_enabled' => true,
+                'cache_ttl' => 666, // Реальные настройки разные для разных запросов
+                'cache_first_ttl' => 666, // см. сам WarpGQL
+            ),
+        ),
+    );

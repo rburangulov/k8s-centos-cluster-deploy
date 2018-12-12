@@ -67,6 +67,9 @@ spec:
         - name: http
           containerPort: 80
           protocol: TCP
+        - name: php
+          containerPort: 8900
+          protocol: TCP
         livenessProbe:
           httpGet:
             path: /
@@ -82,6 +85,9 @@ spec:
         - name: px-server-{{ release_name }}
           mountPath: /var/www/px-profi/sys/nginx/server.conf
           subPath: server.conf
+        - name: px-fastcgi-{{ release_name }}
+          mountPath: /var/www/px-profi/sys/nginx/fastcgi.conf
+          subPath: fastcgi.conf
         resources:
           limits:
             memory: {{ px_nginx.resources.limits.memory }}
@@ -101,3 +107,6 @@ spec:
       - name: px-env-{{ release_name }}
         configMap:
           name: px-env-{{ release_name }}
+      - name: px-fastcgi-{{ release_name }}
+        configMap:
+          name: px-fastcgi-{{ release_name }}

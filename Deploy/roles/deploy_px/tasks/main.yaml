@@ -3,6 +3,11 @@
     state: present
     definition: "{{ lookup('template', '{{ role_path }}/templates/px-nginx-configmap.yaml') | from_yaml }}"
 
+- name: Deploy px fastcgi configmap
+  k8s_raw:
+    state: present
+    definition: "{{ lookup('template', '{{ role_path }}/templates/px-fastcgi-configmap.yaml') | from_yaml }}"
+
 - name: Deploy px env configmap
   k8s_raw:
     state: present

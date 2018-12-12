@@ -11,5 +11,9 @@ spec:
     targetPort: 8200
     protocol: TCP
     name: http
+  - port: 8200
+    targetPort: 8200
+    protocol: TCP
+    name: http8200
   selector:
     app: warp-nginx-{{ release_name }}

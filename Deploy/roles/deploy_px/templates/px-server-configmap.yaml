@@ -1,0 +1,312 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: px-server-{{ release_name }}
+  namespace: {{ namespace }}
+  labels:
+    app: px-{{ release_name }}
+data:
+  server.conf: |
+    # Этот конфиг заступает после перехода на WARP-layout везде.
+
+    set $pxdir var/www/px-profi;
+    root /$pxdir/htdocs;
+    access_log /var/log/px/new/access-eg.log eg_px_profi;
+    client_max_body_size 150m;
+    large_client_header_buffers 4 64k;
+
+    userid on;
+    userid_name sid;
+    userid_expires 0;
+    userid_p3p      'policyref="/w3c/p3p.xml", CP="CUR ADM OUR NOR STA NID"';
+    if ($uid_got ~ ^sid\=(.+)$) {set $uid $1;}
+    if ($uid_set ~ ^sid\=(.+)$) {set $uid $1;}
+    if ($cookie_uid ~ "^[A-z0-9]{32}$") {
+        set $uid $cookie_uid;
+    }
+
+    error_page 500 502 503 504  /error_5xx.html;
+    log_subrequest on;
+
+    location = /apple-app-site-association
+    {
+        rewrite ^(.*)/$ $1;
+
+        default_type application/json;
+        if ($host ~ ^m.profi.ru.*$) {
+            rewrite .* /m.profi.ru-apple-app-site-association;
+        }
+
+        break;
+    }
+
+    location ~* \.(eot|woff|ttf|svg|gif|jpg|js|css|ico|png|swf|wmv|zip|rar|exe|mpg|mp3|mov|wma|asp|dll|doc|docx|xls|bmp|pl|txt)/?$
+    {
+        rewrite ^(.*)/$ $1 permanent;
+        root /$pxdir/htdocs;
+        gzip on;
+        gzip_types application/x-javascript text/css text/javascript application/javascript;
+        expires 7d;
+    }
+
+    location ^~ /client/redirect { rewrite ^/(.*)$ /php$1 last; }
+    location ^~ /json/ { rewrite ^/(.*)$ /php$1 last; }
+    location ^~ /site/cookiePassthrough { rewrite ^/(.*)$ /warp$1 last; }
+    location ^~ /site/ { rewrite ^/(.*)$ /php$1 last; }
+    location ^~ /calculatorAjax/ { rewrite ^/(.*)$ /php$1 last; }
+
+    location ^~ /cabinet/pwdrecover/ {
+      rewrite ^/(.*)$ /$backend_path$1 last;
+    }
+
+
+    location ^~ /apply-for-vacancies { rewrite ^/(.*)$ /php$1 last; }
+
+    location ^~ /merlin {
+      return 403;
+    }
+
+
+    location ^~ /images
+    {
+        root   /$pxdir/htdocs;
+        rewrite ^/images/([a-zA-Z\.]+)/(prep|ppages|i)/(([a-zA-Z0-9])([a-zA-Z0-9]).*)$ /images/$1/$4/$5/$2/$3 last;
+        expires 3M;
+        error_page 400 401 404 500 503 = @images;
+    }
+
+    location ~ /sitemap {
+        proxy_pass  http://static.px.x340.org;
+        set $rewrite_domain "$city.profi.ru";
+        if ( $city = "" ) {
+            set $rewrite_domain "profi.ru";
+        }
+        rewrite ^(.*) /data/sitemaps/$rewrite_domain/$1 break;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_intercept_errors on;
+    }
+
+    location @images
+    {
+        access_log      /var/log/px/access.log px_profi;
+        access_log      /var/log/px/new/access-eg.log eg_px_profi;
+        include         fastcgi_params;
+        expires 3M;
+        fastcgi_pass    px-php;
+        fastcgi_index   index.php;
+        fastcgi_connect_timeout 5;
+        fastcgi_param   DOCUMENT_ROOT   /$pxdir/htdocs;
+        fastcgi_param   SCRIPT_FILENAME $document_root/index.php;
+        fastcgi_param   PATH_INFO       $fastcgi_script_name;
+        fastcgi_param   PX_CITY $city;
+        fastcgi_param   PX_GEO_REGION $geo_region;
+        fastcgi_param   PX_EXTERNAL $px_external;
+        fastcgi_param   PX_META "";
+        fastcgi_param   PX_USER_COUNTRY $country;
+        fastcgi_hide_header Set-Cookie;
+        fastcgi_hide_header X-Powered-By;
+        fastcgi_hide_header Pragma;
+        fastcgi_ignore_headers Cache-Control Expires Set-Cookie;
+        open_file_cache off;
+    }
+
+    location ~ ^/backoffice
+    {
+        proxy_buffering off;
+        proxy_pass http://10.3.0.2;
+        set $proxy_host "profi.ru";
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host 'profi.ru';
+        proxy_set_header X-From-PX "1";
+        proxy_intercept_errors on;
+        proxy_ignore_headers "Cache-Control" "Expires" "Set-Cookie";
+        expires epoch;
+        add_header Last-Modified "";
+    }
+
+    location ^~ /pfiles/
+    {
+        proxy_pass http://cdn.px.x340.org;
+    }
+
+    location ^~ /son/
+    {
+        proxy_pass http://cdn.px.x340.org;
+    }
+
+    # Подменяем     /static_cached/-1531484408944/assets/css/desktop.css
+    # на            /static/assets/css/desktop.css?v=-1531484408944
+    # Это нужно, чтобы работали стенды и локально - просто пробрасываем запрос на js/css на nginx warp-а (стенды)
+    # или сам warp (локально). На проде js/css будут взяты с nginx на балансере.
+    # Если там не найдется - то запрос пойдет сюда.
+    # rewrite_log on;
+    location ^~ /static_cached/
+    {
+        rewrite ^/static_cached/([^/]+)/(.*)$ /static/$2?v=$1 break;
+
+        charset utf-8;
+        charset_types application/x-javascript text/css text/javascript application/javascript;
+
+        proxy_buffer_size 64k;
+        proxy_buffers 4 128k;
+        proxy_busy_buffers_size 128k;
+
+        proxy_pass_request_headers on;
+        proxy_hide_header Set-Cookie;
+        proxy_ignore_headers Set-Cookie Cache-Control Expires Vary;
+
+        proxy_pass http://warp-nginx-{{ release_name }};
+
+        expires 30d;
+    }
+
+    location ^~ /static/
+    {
+        charset utf-8;
+        charset_types application/x-javascript text/css text/javascript application/javascript;
+        proxy_pass http://warp-nginx-{{ release_name }};
+        expires 7d;
+    }
+
+    location ^~ /graphql
+    {
+        proxy_buffer_size 64k;
+        proxy_buffers 4 128k;
+        proxy_busy_buffers_size 128k;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header px_uid $uid;
+        proxy_set_header px_user_country $country;
+        proxy_set_header px_geo_region $geo_region;
+        proxy_set_header Host $host;
+        proxy_set_header X-From-PX "1";
+        proxy_set_header 'X-Warp-Consumer' 'px-profi';
+        proxy_pass_request_headers on;
+        proxy_pass http://warp-nginx-{{ release_name }}/graphql;
+    }
+
+    location /warp-alive
+    {
+        rewrite ^(.*)/$ $1;
+        proxy_buffer_size 64k;
+        proxy_buffers 4 128k;
+        proxy_busy_buffers_size 128k;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_pass http://warp-nginx-{{ release_name }};
+    }
+
+    location /warp
+    {
+        ssi               on;
+        ssi_silent_errors off;
+        proxy_buffer_size 64k;
+        proxy_buffers 4 128k;
+        proxy_busy_buffers_size 128k;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header px_uid $uid;
+        proxy_set_header px_user_country $country;
+        proxy_set_header px_geo_region $geo_region;
+        proxy_set_header Host $host;
+        proxy_set_header X-From-PX "1";
+        proxy_pass_request_headers on;
+        proxy_pass http://warp-nginx-{{ release_name }}/;
+    }
+
+    location ^~ /ssi_node
+    {
+        # Теперь ssi-виджет пишет в nginx-переменную версию статики
+        ssi on;
+        ssi_silent_errors off;
+
+        # Код ssi-виджета должен влезать в этот лимит
+        subrequest_output_buffer_size 640k;
+
+        internal;
+        proxy_cache_valid 200 2d;
+
+        set $ckey   "$request_method|$uri$is_args$arg_cachekey";
+        proxy_cache_key "$ckey";
+        proxy_cache_methods   GET HEAD;
+
+        proxy_buffering on;
+        proxy_cache ssipage;
+
+        proxy_no_cache $arg_nowrcache;
+        proxy_cache_bypass $arg_notfromcache;
+        # proxy_cache_purge $arg_purgecache;
+
+        proxy_cache_background_update on;
+        proxy_cache_min_uses  1;
+        proxy_cache_lock      on;
+        proxy_cache_lock_age  5s;
+        proxy_cache_lock_timeout 5s;
+        proxy_cache_use_stale error timeout invalid_header updating http_500 http_502 http_503 http_504 http_403;
+
+
+        proxy_buffer_size 64k;
+        proxy_buffers 4 128k;
+        proxy_busy_buffers_size 128k;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header px_uid $uid;
+        proxy_set_header px_user_country $country;
+        proxy_set_header px_geo_region $geo_region;
+        proxy_set_header Host $host;
+        proxy_set_header X-From-PX "1";
+        proxy_set_header X-From-SSI "1";
+        proxy_set_header X-Cache-Key $ckey;
+        proxy_set_header X-Cache-Status $upstream_cache_status;
+
+        proxy_pass_request_headers on;
+        proxy_hide_header Set-Cookie;
+        proxy_ignore_headers Set-Cookie Cache-Control Expires Vary;
+
+        proxy_pass http://warp-nginx-{{ release_name }};
+    }
+
+    location /php
+    {
+        proxy_buffer_size 64k;
+        proxy_buffers 4 128k;
+        proxy_busy_buffers_size 128k;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header px_uid $uid;
+        proxy_set_header px_user_country $country;
+        proxy_set_header px_geo_region $geo_region;
+        proxy_set_header Host $host;
+        proxy_pass_request_headers on;
+        proxy_pass http://127.0.0.1:8900/;
+    }
+
+
+    location ^~ /landing/
+    {
+        index index.html index.htm;
+    }
+
+    location ^~ /fonts/
+    {
+        add_header Access-Control-Allow-Origin *;
+    }
+
+    location /
+    {
+        if ($http_user_agent ~* '(MSIE 9|MSIE 8|MSIE 7|MSIE 6)') {
+            rewrite ^ /static/ie9-support.html last;
+        }
+
+        if ($request_method = GET) {
+            rewrite ^/([^\.]*[^/])$ /$1/ permanent;
+            rewrite ^/(.*\.+.*)[/]+$ /$1 permanent;
+        }
+
+        if ( !-f $request_filename) {
+            rewrite ^/(.*)$ /warp$1 last;
+        }
+    }

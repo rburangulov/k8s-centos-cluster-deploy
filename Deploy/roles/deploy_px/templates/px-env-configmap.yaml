@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: px-env-{{ release_name }}
+  namespace: {{ namespace }}
+  labels:
+    app: px-{{ release_name }}
+data:
+  env.php: |
+    <?php
+    define('APP_ENV', 'dev');
+    define('YII_DEBUG', true);
+    define('YII_TRACE_LEVEL',0);
+    define('WARP_NEAREST', 'warp-nginx-{{ release_name }}');

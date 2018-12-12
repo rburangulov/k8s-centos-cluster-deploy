@@ -1,0 +1,83 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: px-{{ release_name }}
+  namespace: {{ namespace }}
+  labels:
+    app: px-{{ release_name }}
+spec:
+  replicas: {{ px.replica_count }}
+  selector:
+    matchLabels:
+      app: px-{{ release_name }}
+  template:
+    metadata:
+      labels:
+        app: px-{{ release_name }}
+    spec:
+      containers:
+      - name: px-memcache-{{ release_name }}
+        image: "{{ px_memcache.image_name }}:{{ px_memcache.image_tag }}"
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: {{ px_memcache.resources.limits.memory }}
+            cpu: {{ px_memcache.resources.limits.cpu }}
+          requests:
+            memory: {{ px_memcache.resources.requests.memory }}
+            cpu: {{ px_memcache.resources.limits.cpu }}
+      - name: px-php-{{ release_name }}
+        image: "{{ px_php.image_name }}:{{ px_php.image_tag }}"
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: {{ px_php.resources.limits.memory }}
+            cpu: {{ px_php.resources.limits.cpu }}
+          requests:
+            memory: {{ px_php.resources.requests.memory }}
+            cpu: {{ px_php.resources.limits.cpu }}
+        volumeMounts:
+        - name: px-env-{{ release_name }}
+          mountPath: /var/www/px-profi/env.php
+          subPath: env.php
+      - name: px-nginx-{{ release_name }}
+        image: "{{ px_nginx.image_name }}:{{ px_nginx.image_tag }}"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+        volumeMounts:
+        - name: px-nginx-{{ release_name }}
+          mountPath: /etc/nginx/conf.d/px-profi.conf
+          subPath: px-profi.conf
+        - name: px-server-{{ release_name }}
+          mountPath: /var/www/px-profi/sys/nginx/server.conf
+          subPath: server.conf
+        resources:
+          limits:
+            memory: {{ px_nginx.resources.limits.memory }}
+            cpu: {{ px_nginx.resources.limits.cpu }}
+          requests:
+            memory: {{ px_nginx.resources.requests.memory }}
+            cpu: {{ px_nginx.resources.limits.cpu }}
+      imagePullSecrets:
+      - name: {{ registry_credential_secret }}
+      volumes:
+      - name: px-nginx-{{ release_name }}
+        configMap:
+          name: px-nginx-{{ release_name }}
+      - name: px-server-{{ release_name }}
+        configMap:
+          name: px-server-{{ release_name }}
+      - name: px-env-{{ release_name }}
+        configMap:
+          name: px-env-{{ release_name }}

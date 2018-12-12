@@ -10,11 +10,12 @@
       kind: Namespace
       state: present
 
-- name: Deploy warp
+- name: Deploy warp and px-profi
   hosts: localhost
   roles:
   - deploy_registry_cred
   - deploy_warp_env_configmap
   - deploy_warp
+  - deploy_px
   vars_files:
   - vars/stend.yaml

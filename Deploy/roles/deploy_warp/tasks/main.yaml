@@ -18,17 +18,17 @@
     state: present
     definition: "{{ lookup('template', '{{ role_path }}/templates/warp-upstream-configmap.yaml') | from_yaml }}"
 
-- name: Deploy nginx deployment
+- name: Deploy warp nginx deployment
   k8s_raw:
     state: present
     definition: "{{ lookup('template', '{{ role_path }}/templates/nginx-deployment.yaml') | from_yaml }}"
 
-- name: Deploy nginx service
+- name: Deploy warp nginx service
   k8s_raw:
     state: present
     definition: "{{ lookup('template', '{{ role_path }}/templates/nginx-service.yaml') | from_yaml }}"
 
-- name: Deploy nginx ingress
+- name: Deploy warp nginx ingress
   k8s_raw:
     state: present
     definition: "{{ lookup('template', '{{ role_path }}/templates/nginx-ingress.yaml') | from_yaml }}"

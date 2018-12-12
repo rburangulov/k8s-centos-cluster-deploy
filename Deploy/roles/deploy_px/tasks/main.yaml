@@ -1,0 +1,29 @@
+- name: Deploy px nginx configmap
+  k8s_raw:
+    state: present
+    definition: "{{ lookup('template', '{{ role_path }}/templates/px-nginx-configmap.yaml') | from_yaml }}"
+
+- name: Deploy px env configmap
+  k8s_raw:
+    state: present
+    definition: "{{ lookup('template', '{{ role_path }}/templates/px-env-configmap.yaml') | from_yaml }}"
+
+- name: Deploy px server configmap
+  k8s_raw:
+    state: present
+    definition: "{{ lookup('template', '{{ role_path }}/templates/px-server-configmap.yaml') | from_yaml }}"
+
+- name: Deploy px deployment
+  k8s_raw:
+    state: present
+    definition: "{{ lookup('template', '{{ role_path }}/templates/px-deployment.yaml') | from_yaml }}"
+
+- name: Deploy px service
+  k8s_raw:
+    state: present
+    definition: "{{ lookup('template', '{{ role_path }}/templates/px-service.yaml') | from_yaml }}"
+
+- name: Deploy px ingress
+  k8s_raw:
+    state: present
+    definition: "{{ lookup('template', '{{ role_path }}/templates/px-ingress.yaml') | from_yaml }}"

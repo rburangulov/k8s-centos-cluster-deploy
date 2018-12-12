@@ -41,7 +41,7 @@ data:
         ),
         'HiveProfiles' => array(
             'default' => array(
-                'gateway' => 'http://10.26.0.15:18116/',
+                'gateway' => '{{ px_env.hive_conn_str }}',
                 'consumer' => 'px.profi',
                 'timeout' => 5,
                 'retries' => 2,

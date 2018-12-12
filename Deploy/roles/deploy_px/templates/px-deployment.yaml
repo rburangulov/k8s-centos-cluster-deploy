@@ -19,6 +19,16 @@ spec:
       - name: px-memcache-{{ release_name }}
         image: "{{ px_memcache.image_name }}:{{ px_memcache.image_tag }}"
         imagePullPolicy: IfNotPresent
+        ports:
+        - name: main
+          containerPort: 11211
+          protocol: TCP
+        readinessProbe:
+          tcpSocket:
+            port: 11211
+        livenessProbe:
+          tcpSocket:
+            port: 11211
         resources:
           limits:
             memory: {{ px_memcache.resources.limits.memory }}
@@ -29,6 +39,16 @@ spec:
       - name: px-php-{{ release_name }}
         image: "{{ px_php.image_name }}:{{ px_php.image_tag }}"
         imagePullPolicy: IfNotPresent
+        ports:
+        - name: main
+          containerPort: 9000
+          protocol: TCP
+        readinessProbe:
+          tcpSocket:
+            port: 9000
+        livenessProbe:
+          tcpSocket:
+            port: 9000
         resources:
           limits:
             memory: {{ px_php.resources.limits.memory }}

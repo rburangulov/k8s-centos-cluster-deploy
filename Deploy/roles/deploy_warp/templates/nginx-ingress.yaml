@@ -9,6 +9,12 @@ metadata:
     app: warp-{{ release_name }}
 spec:
   rules:
+  - host: {{ release_name }}.warp.{{ ingress_domain }}
+      http:
+        paths:
+        - backend:
+            serviceName: warp-nginx-{{ release_name }}
+            servicePort: 80
   - host: profi.ru.{{ release_name }}.warp.{{ ingress_domain }}
     http:
       paths:

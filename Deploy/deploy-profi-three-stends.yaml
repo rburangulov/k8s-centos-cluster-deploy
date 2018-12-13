@@ -1,5 +1,6 @@
 - name: Create namespace
   hosts: localhost
+  gather_facts: no
   vars_files:
   - vars/stend.yaml
   tasks:
@@ -12,6 +13,7 @@
 
 - name: Deploy warp and px-profi
   hosts: localhost
+  gather_facts: no
   roles:
   - deploy_registry_cred
   - deploy_warp

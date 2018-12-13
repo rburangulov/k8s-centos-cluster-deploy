@@ -1,5 +1,6 @@
 - name: Deploy warp for pull request testing
   hosts: localhost
+  gather_facts: no
   roles:
   - deploy_registry_cred
   - deploy_warp

@@ -30,7 +30,7 @@ spec:
             path: /
             port: 8200
         volumeMounts:
-        - name: {{ warp.env_configmap }}
+        - name: warp-env
           mountPath: /opt/warp/.env
           subPath: .env
         resources:
@@ -43,6 +43,6 @@ spec:
       imagePullSecrets:
       - name: {{ registry_credential_secret }}
       volumes:
-      - name: {{ warp.env_configmap }}
+      - name: warp-env
         configMap:
-          name: {{ warp.env_configmap }}
+          name: warp-env

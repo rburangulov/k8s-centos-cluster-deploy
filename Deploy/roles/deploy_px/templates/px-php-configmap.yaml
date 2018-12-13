@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: px-php
+  namespace: {{ namespace }}
+data:
+  px-php.inc: |
+    server 127.0.0.1:9000;

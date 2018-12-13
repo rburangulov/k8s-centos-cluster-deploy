@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: warp-nginx-{{ release_name }}
+  name: ngi-warp
   namespace: {{ namespace }}
   labels:
-    app: warp-{{ release_name }}
+    app: warp-nginx
 spec:
   ports:
   - port: 80
@@ -16,4 +16,4 @@ spec:
     protocol: TCP
     name: http8200
   selector:
-    app: warp-nginx-{{ release_name }}
+    app: warp-nginx

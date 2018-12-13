@@ -1,4 +1,4 @@
-namespace: warp-pull-testing
+namespace: "warp-pr-{{ release_name }}"
 registry_credential_secret: shot-registry-credential
 ingress_domain: k8s.shot.x340.org
 
@@ -26,3 +26,156 @@ warp_nginx:
     requests:
       memory: 512Mi
       cpu: 250m
+
+warp_env:
+  warp_port: 8200
+  oauth_verify_token_url: http://10.26.0.15:3000/oauth/isAuthorized
+  php_sec_cookie_salt: 698d9cb931078eee1207dfb74ec05bf9
+  vr_api_consumer: test
+  vr_api_url: "http://repetitors.info.trunk-ee4a0c4f-acc-test.stend.x340.org/api/system/"
+  vr_api_salt: salt
+  mysql_pool_slave1_conn_user: shot_oms
+  mysql_pool_slave1_conn_pass: zbZBF0ctZIXk9BX8
+  mysql_pool_slave1_conn_db: stend-db-daily.x340.org
+  mysql_pool_slave1_timeout_acquire: 500
+  mysql_pool_slave1_timeout_warning: 55
+  mysql_pool_slave1_trace:
+  mysql_pool_slave2_conn_user: shot_oms
+  mysql_pool_slave2_conn_pass: zbZBF0ctZIXk9BX8
+  mysql_pool_slave2_conn_db: stend-db-daily.x340.org
+  mysql_pool_slave2_timeout_acquire: 500
+  mysql_pool_slave2_timeout_warning: 55
+  mysql_pool_slave2_trace:
+  mysql_pool_master_conn_user: shot_oms
+  mysql_pool_master_conn_pass: zbZBF0ctZIXk9BX8
+  mysql_pool_master_conn_db: stend-db-daily.x340.org
+  mysql_pool_master_timeout_acquire: 1000
+  mysql_pool_master_timeout_warning: 55
+  mysql_pool_master_trace:
+  mysql_pool_chat_conn_user: warpst
+  mysql_pool_chat_conn_pass: eW00ESdxlTp55k51
+  mysql_pool_chat_conn_db: stend-db-daily.x340.org
+  mysql_pool_chat_name: chat
+  mysql_pool_chatslave_conn_user: warpst
+  mysql_pool_chatslave_conn_pass: eW00ESdxlTp55k51
+  mysql_pool_chatslave_conn_db: stend-db-daily.x340.org
+  mysql_pool_chatslave_name: chatSlave
+  mysql_pool_chatandvr_conn_user: warpst
+  mysql_pool_chatandvr_conn_pass: eW00ESdxlTp55k51
+  mysql_pool_chatandvr_conn_db: stend-db-daily.x340.org
+  mysql_pool_chatandvr_name: chatAndVr
+  mysql_cluster_slave_pools: SLAVE1,SLAVE2
+  mysql_cluster_slave_trace: all
+  mysql_cluster_slave_timeout_warning: 55
+  mysql_conn_str_user: shot_oms
+  mysql_conn_str_pass: zbZBF0ctZIXk9BX8
+  mysql_conn_str_db: stend-db-daily.x340.org
+  mysql_master_conn_str_user: shot_oms
+  mysql_master_conn_str_pass: zbZBF0ctZIXk9BX8
+  mysql_master_conn_str_db: stend-db-daily.x340.org
+  mongodb_conn_str: mongodb://master.db.shot.x340.org:27017/?replicaSet=oms&readPreference=secondaryPreferred
+  recaptcha_site_key: 6LdfoiMTAAAAAEBVcPo91G-1S-uDoXQ0qnVMCRGC
+  recaptcha_secret: 6LdfoiMTAAAAAPb6Tjs1VMeAbOy_3mBFhRqIluBQ
+  hive_conn_str: http://10.26.0.15:18116/
+  mysql_sphinx_conn_str: "mysql://sphinx-noregress.shot.x340.org:9306/?connectionLimit=1"
+  ratelimits_whitelist: "10.0.0.0/8,192.168.0.0/16,127.0.0.0/8"
+  hermes_api_url: http://10.27.11.73:1000/seo/api/content
+  mysql_pxchat_conn_str_user: warpst
+  mysql_pxchat_conn_str_pass: eW00ESdxlTp55k51
+  mysql_pxchat_conn_str_db: stend-db-daily.x340.org
+  mysql_pxchat_slave_conn_str_user: warpst
+  mysql_pxchat_slave_conn_str_pass: eW00ESdxlTp55k51
+  mysql_pxchat_slave_conn_str_db: stend-db-daily.x340.org
+  pxchat_pool_size:
+  mysql_pxchat_and_vr_conn_str_user: warpst
+  mysql_pxchat_and_vr_conn_str_pass: eW00ESdxlTp55k51
+  mysql_pxchat_and_vr_conn_str_db: stend-db-daily.x340.org
+  node_env: production
+  omen_api_url: http://10.26.0.15:18117/
+  learn_gql_hashes: 0
+  email_send_fail_order:
+  email_from_fail_order: order@profi.ru
+  px_chat_widget_sec_salt: testPxChatSalt
+  rabbit_conn_str: amqp://testmq:mqpass@rabbit1.test.shot.x340.org:5673/daily?heartbeat=30
+  new_relic_enabled: "false"
+  new_relic_license_key:
+  new_relic_app_name: 'WARP'
+  new_relic_no_config_file: "true"
+  new_relic_ignoring_rules: '^/socket\.io/.*'
+  new_relic_slow_sql_enabled: "true"
+  new_relic_record_sql: raw
+  slack_bot_token: xoxb-108392384021-mBbWbFttEONFrUQ2YN9eerIe
+  slack_bot_channel: chatstats
+  ab_async_query_url: http://ab-stend.x340.org:80/query.php
+  ab_async_query_secret:
+  ab_async_query_memcached: ab-stend.x340.org:11211
+  ab_secret:
+  ab_async_query_timeout: 500
+  ab_db_name: abdb
+  ab_city_id: prfr
+  session_do_not_save_uninitialized: "false"
+  wizard_system_api_salt: mySecretSalt
+  mail_api_url: http://10.26.0.15:7080/api/emsender/profi_subscribe
+  mail_api_salt: salt
+  online_enabled: 1
+  omsdb_conn_str: mysql://oms:oms^@master.db.shot.x340.org/
+  es_host: haproxy-noregress.shot.x340.org:9200
+  es_host_new: ela62.test.shot.x340.org:9200
+  vk_app_id: 6053514
+  vk_app_secret: GZQQDkk9LzvfIB60XmZQ
+  vk_app_token: 0ed254060ed254060ed25406c30e8e0a8c00ed20ed25406571c70826d4116ab154d8628
+  vk_api_url: https://api.vk.com
+  vk_oauth_url: https://oauth.vk.com
+  vk_redirect_uri: https://profi.ru.master-ee4a0c4f-acc-test.px.noregress.shot.x340.org/auth/socialNets/vk/
+  ok_app_id: 1254092288
+  ok_app_public: CBAPOQLLEBABABABA
+  ok_app_secret: BC91164A031059B44D845880
+  ok_api_url: https://api.ok.ru
+  ok_oauth_url: https://connect.ok.ru/oauth
+  ok_redirect_uri: https://profi.ru.master-ee4a0c4f-acc-test.px.noregress.shot.x340.org/auth/socialNets/ok/
+  facebook_client_id: 719887464878589
+  facebook_client_secret: a1adcedaf9beddf9c7fbedd4137a24de
+  facebook_api_url: https://graph.facebook.com/v2.10
+  facebook_oauth_url: https://www.facebook.com/v2.10/dialog/oauth
+  facebook_redirect_uri: https://profi.ru.master-ee4a0c4f-acc-test.px.noregress.shot.x340.org/auth/socialNets/fb/
+  google_client_id: 845081266221-g68v84f2mv0a3ll6t66rhrusoln8djas.apps.googleusercontent.com
+  google_client_secret: IboHCjom1MYL8ZvLl1V_7alD
+  google_oauth_url: https://accounts.google.com/o/oauth2/v2/auth
+  google_redirect_uri: https://profi.ru.master-ee4a0c4f-acc-test.px.noregress.shot.x340.org/auth/socialNets/go/
+  session_cookie_secret: warp
+  backoffice_api_consumer: stend
+  backoffice_api_salt: 7miLomBzzt3z
+  backoffice_api_url: http://repetitors.info.trunk-ee4a0c4f-acc-test.stend.x340.org/api/backoffice/
+  es_host_sage: ela6.test.shot.x340.org:9200
+  px_nearest: px-ngi:8900
+  warp_env: stend
+  speedtest_api_key: AIzaSyAgwydZ9Ot2RwR3rTfa2-RUhjsqu1nTHMQ
+  chatbot_access_token:
+  chatbot_group_id:
+  chatbot_streaming_api_key:
+  mysql_binlog_vrdb1_conn_user: binusr
+  mysql_binlog_vrdb1_conn_pass: Morkov007
+  mysql_binlog_vrdb1_conn_db: stend-db.x340.org
+  mysql_binlog_vrdb1_fakeschema_user: syncusr
+  mysql_binlog_vrdb1_fakeschema_pass: Morkov008
+  mysql_binlog_vrdb1_fakeschema_db: stend-db.x340.org
+  mysql_binlog_vrdb1_zongji_schema_tables: ri_preps,ri_events,ri_orders,ri_datao,ri_datap,ri_reviews,ri_oinfs,ri_msngr_events,ri_opa,ri_otkazs,ri_ppricex,ri_pfiles,ri_pprices,ric_sotrs
+  mysql_binlog_vrdb2_conn_user: binusr
+  mysql_binlog_vrdb2_conn_pass: Morkov007
+  mysql_binlog_vrdb2_conn_db: stend-db.x340.org
+  mysql_binlog_vrdb2_fakeschema_user: syncusr
+  mysql_binlog_vrdb2_fakeschema_pass: Morkov008
+  mysql_binlog_vrdb2_fakeschema_db: stend-db.x340.org
+  mysql_binlog_vrdb2_zongji_schema_tables: ri_preps,ri_events,ri_orders,ri_datao,ri_datap,ri_reviews,ri_oinfs,ri_msngr_events,ri_opa,ri_otkazs,ri_ppricex,ri_pfiles,ri_pprices,ric_sotrs
+  mysql_binlog_pxchat_conn_user: binusr
+  mysql_binlog_pxchat_conn_pass: Morkov007
+  mysql_binlog_pxchat_conn_db: stend-db.x340.org
+  mysql_binlog_pxchat_fakeschema_user: syncusrpxchat
+  mysql_binlog_pxchat_fakeschema_pass: Morkov009
+  mysql_binlog_pxchat_fakeschema_db: stend-db.x340.org
+  mysql_binlog_pxchat_zongji_schema_tables: user_presence
+  mysql_binlog_pxchat_publish_prefix: PXCHATDB_CHANGES
+  mysql_binlog_pxchat_publish_persistent: 0
+  vacancies_response_emails: job@profi.ru,kasyanovnv@profi.ru
+  check_hashes_exists: 1
+  ds_host: http://master.ds.k8s.shot.x340.org

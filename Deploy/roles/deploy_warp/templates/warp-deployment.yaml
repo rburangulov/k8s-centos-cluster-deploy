@@ -1,22 +1,22 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: warp-{{ release_name }}
+  name: warp
   namespace: {{ namespace }}
   labels:
-    app: warp-{{ release_name }}
+    app: warp
 spec:
   replicas: {{ warp.replica_count }}
   selector:
     matchLabels:
-      app: warp-{{ release_name }}
+      app: warp
   template:
     metadata:
       labels:
-        app: warp-{{ release_name }}
+        app: warp
     spec:
       containers:
-      - name: warp-{{ release_name }}
+      - name: warp
         image: "{{ warp.image_name }}:{{ warp.image_tag }}"
         imagePullPolicy: IfNotPresent
         ports:

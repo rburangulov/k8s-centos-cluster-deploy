@@ -1,22 +1,22 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: warp-nginx-{{ release_name }}
+  name: warp-nginx
   namespace: {{ namespace }}
   labels:
-    app: warp-{{ release_name }}
+    app: warp-ngix
 spec:
   replicas: {{ warp_nginx.replica_count }}
   selector:
     matchLabels:
-      app: warp-nginx-{{ release_name }}
+      app: warp-nginx
   template:
     metadata:
       labels:
-        app: warp-nginx-{{ release_name }}
+        app: warp-nginx
     spec:
       containers:
-      - name: warp-nginx-{{ release_name }}
+      - name: warp-nginx
         image: "{{ warp_nginx.image_name }}:{{ warp_nginx.image_tag }}"
         imagePullPolicy: IfNotPresent
         ports:
@@ -31,13 +31,6 @@ spec:
           httpGet:
             path: /
             port: 8200
-        volumeMounts:
-        - name: warp-upstream-{{ release_name }}
-          mountPath: /etc/nginx/conf.d/warp-docker-upstream.conf
-          subPath: warp-docker-upstream.conf
-        - name: warp-nginx-{{ release_name }}
-          mountPath: /etc/nginx/conf.d/warp.conf
-          subPath: warp.conf
         resources:
           limits:
             memory: {{ warp_nginx.resources.limits.memory }}
@@ -47,10 +40,3 @@ spec:
             cpu: {{ warp_nginx.resources.limits.cpu }}
       imagePullSecrets:
       - name: {{ registry_credential_secret }}
-      volumes:
-      - name: warp-upstream-{{ release_name }}
-        configMap:
-          name: warp-upstream-{{ release_name }}
-      - name: warp-nginx-{{ release_name }}
-        configMap:
-          name: warp-nginx-{{ release_name }}

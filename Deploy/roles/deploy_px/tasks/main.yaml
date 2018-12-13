@@ -1,12 +1,12 @@
-- name: Deploy px nginx configmap
+- name: Deploy px php configmap
   k8s_raw:
     state: present
-    definition: "{{ lookup('template', '{{ role_path }}/templates/px-nginx-configmap.yaml') | from_yaml }}"
+    definition: "{{ lookup('template', '{{ role_path }}/templates/px-php-configmap.yaml') | from_yaml }}"
 
-- name: Deploy px fastcgi configmap
+- name: Deploy px profi configmap
   k8s_raw:
     state: present
-    definition: "{{ lookup('template', '{{ role_path }}/templates/px-fastcgi-configmap.yaml') | from_yaml }}"
+    definition: "{{ lookup('template', '{{ role_path }}/templates/px-profi-configmap.yaml') | from_yaml }}"
 
 - name: Deploy px api configmap
   k8s_raw:
@@ -17,11 +17,6 @@
   k8s_raw:
     state: present
     definition: "{{ lookup('template', '{{ role_path }}/templates/px-env-configmap.yaml') | from_yaml }}"
-
-- name: Deploy px server configmap
-  k8s_raw:
-    state: present
-    definition: "{{ lookup('template', '{{ role_path }}/templates/px-server-configmap.yaml') | from_yaml }}"
 
 - name: Deploy px deployment
   k8s_raw:

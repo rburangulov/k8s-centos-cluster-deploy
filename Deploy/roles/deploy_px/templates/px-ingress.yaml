@@ -1,29 +1,29 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: px-{{ release_name }}
+  name: px
   namespace: {{ namespace }}
   annotations:
     kubernetes.io/ingress.class: traefik
   labels:
-    app: px-{{ release_name }}
+    app: px
 spec:
   rules:
   - host: profi.ru.{{ release_name }}.px.{{ ingress_domain }}
     http:
       paths:
       - backend:
-          serviceName: px-{{ release_name }}
+          serviceName: px-ngi
           servicePort: 80
   - host: online.profi.ru.{{ release_name }}.px.{{ ingress_domain }}
     http:
       paths:
       - backend:
-          serviceName: px-{{ release_name }}
+          serviceName: px-ngi
           servicePort: 80
   - host: upload.profi.ru.{{ release_name }}.px.{{ ingress_domain }}
     http:
       paths:
       - backend:
-          serviceName: px-{{ release_name }}
+          serviceName: px-ngi
           servicePort: 80

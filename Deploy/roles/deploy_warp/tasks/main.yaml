@@ -1,3 +1,13 @@
+- name: Deploy warp env configmap
+  k8s_raw:
+    state: present
+    definition: "{{ lookup('template', '{{ role_path }}/templates/warp-env-configmap.yaml') | from_yaml }}"
+
+- name: Deploy warp upstream configmap
+  k8s_raw:
+    state: present
+    definition: "{{ lookup('template', '{{ role_path }}/templates/warp-upstream-configmap.yaml') | from_yaml }}"
+
 - name: Deploy warp deployment
   k8s_raw:
     state: present
@@ -7,16 +17,6 @@
   k8s_raw:
     state: present
     definition: "{{ lookup('template', '{{ role_path }}/templates/warp-service.yaml') | from_yaml }}"
-
-- name: Deploy warp nginx configmap
-  k8s_raw:
-    state: present
-    definition: "{{ lookup('template', '{{ role_path }}/templates/warp-nginx-configmap.yaml') | from_yaml }}"
-
-- name: Deploy warp ustream configmap
-  k8s_raw:
-    state: present
-    definition: "{{ lookup('template', '{{ role_path }}/templates/warp-upstream-configmap.yaml') | from_yaml }}"
 
 - name: Deploy warp nginx deployment
   k8s_raw:

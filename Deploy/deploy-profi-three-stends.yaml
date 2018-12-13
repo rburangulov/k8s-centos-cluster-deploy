@@ -1,4 +1,4 @@
-- name: Prepare environment
+- name: Create namespace
   hosts: localhost
   vars_files:
   - vars/stend.yaml
@@ -14,7 +14,6 @@
   hosts: localhost
   roles:
   - deploy_registry_cred
-  - deploy_warp_env_configmap
   - deploy_warp
   - deploy_px
   vars_files:

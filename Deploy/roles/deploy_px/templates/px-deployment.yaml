@@ -1,22 +1,22 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: px-{{ release_name }}
+  name: px
   namespace: {{ namespace }}
   labels:
-    app: px-{{ release_name }}
+    app: px
 spec:
   replicas: {{ px.replica_count }}
   selector:
     matchLabels:
-      app: px-{{ release_name }}
+      app: px
   template:
     metadata:
       labels:
-        app: px-{{ release_name }}
+        app: px
     spec:
       containers:
-      - name: px-memcache-{{ release_name }}
+      - name: px-memcache
         image: "{{ px_memcache.image_name }}:{{ px_memcache.image_tag }}"
         imagePullPolicy: IfNotPresent
         ports:
@@ -36,7 +36,7 @@ spec:
           requests:
             memory: {{ px_memcache.resources.requests.memory }}
             cpu: {{ px_memcache.resources.limits.cpu }}
-      - name: px-php-{{ release_name }}
+      - name: px-php
         image: "{{ px_php.image_name }}:{{ px_php.image_tag }}"
         imagePullPolicy: IfNotPresent
         ports:
@@ -57,13 +57,13 @@ spec:
             memory: {{ px_php.resources.requests.memory }}
             cpu: {{ px_php.resources.limits.cpu }}
         volumeMounts:
-        - name: px-env-{{ release_name }}
+        - name: px-env
           mountPath: /var/www/px-profi/env.php
           subPath: env.php
-        - name: px-api-{{ release_name }}
+        - name: px-api
           mountPath: /var/www/px-profi/protected/config/api.php
           subPath: api.php
-      - name: px-nginx-{{ release_name }}
+      - name: px-nginx
         image: "{{ px_nginx.image_name }}:{{ px_nginx.image_tag }}"
         imagePullPolicy: IfNotPresent
         ports:
@@ -82,15 +82,12 @@ spec:
             path: /
             port: 80
         volumeMounts:
-        - name: px-nginx-{{ release_name }}
+        - name: px-profi
           mountPath: /etc/nginx/conf.d/px-profi.conf
           subPath: px-profi.conf
-        - name: px-server-{{ release_name }}
-          mountPath: /var/www/px-profi/sys/nginx/server.conf
-          subPath: server.conf
-        - name: px-fastcgi-{{ release_name }}
-          mountPath: /var/www/px-profi/sys/nginx/fastcgi.conf
-          subPath: fastcgi.conf
+        - name: px-php
+          mountPath: /etc/nginx/conf.d/hosts/px-php.inc
+          subPath: px-php.inc
         resources:
           limits:
             memory: {{ px_nginx.resources.limits.memory }}
@@ -101,18 +98,15 @@ spec:
       imagePullSecrets:
       - name: {{ registry_credential_secret }}
       volumes:
-      - name: px-nginx-{{ release_name }}
+      - name: px-php
         configMap:
-          name: px-nginx-{{ release_name }}
-      - name: px-server-{{ release_name }}
+          name: px-php
+      - name: px-profi
         configMap:
-          name: px-server-{{ release_name }}
-      - name: px-env-{{ release_name }}
+          name: px-profi
+      - name: px-env
         configMap:
-          name: px-env-{{ release_name }}
-      - name: px-fastcgi-{{ release_name }}
+          name: px-env
+      - name: px-api
         configMap:
-          name: px-fastcgi-{{ release_name }}
-      - name: px-api-{{ release_name }}
-        configMap:
-          name: px-api-{{ release_name }}
+          name: px-api

@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: px-{{ release_name }}
+  name: px-ngi
   namespace: {{ namespace }}
   labels:
-    app: px-{{ release_name }}
+    app: px
 spec:
   ports:
   - port: 80
@@ -16,4 +16,4 @@ spec:
     protocol: TCP
     name: php
   selector:
-    app: px-{{ release_name }}
+    app: px

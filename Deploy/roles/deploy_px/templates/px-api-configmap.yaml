@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: px-api-{{ release_name }}
+  name: px-api
   namespace: {{ namespace }}
   labels:
-    app: px-{{ release_name }}
+    app: px
 data:
   api.php: |
     <?php

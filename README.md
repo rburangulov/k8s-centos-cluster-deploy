@@ -1,4 +1,4 @@
-create_cluster.yml playbook is user for deploying Kubernetes cluster to Centos 7. Weavenet network plugin is used. Traefik Ingress contoller.
+create_cluster.yml playbook is used for deploying Kubernetes cluster to Centos 7. Weavenet network plugin is used. Traefik Ingress contoller.
 
 hosts file example:
 

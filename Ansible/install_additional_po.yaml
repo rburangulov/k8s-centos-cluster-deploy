@@ -1,8 +1,0 @@
-- name: Install dashboard, prometheus exporter, ldap authorization
-  hosts: init-master
-  roles:
-    - dashboard
-    - monitoring
-    - metricbeat
-    - k8s-ldap
-    - traefik

@@ -1,9 +1,0 @@
----
-- name: Create .ssh directory
-  file: path=~/.ssh state=directory
-
-- name: Copy id_rsa
-  copy:
-    src: "~/.ssh/id_rsa"
-    dest: "~/.ssh/id_rsa"
-    mode: 0400

@@ -1,0 +1,8 @@
+- name: Install prometheus exporters, traefik
+  hosts: masters[0]
+  become: yes
+  become_method: sudo
+  roles:
+    - monitoring
+    - traefik
+    - dashboard

@@ -1,0 +1,16 @@
+---
+- name: Copy heapster.yaml
+  copy:
+    src: "{{ role_path }}/files/heapster.yaml"
+    dest: /root/heapster.yaml
+
+- name: Install heapster
+  command: kubectl apply -f /root/heapster.yaml
+
+- name: Copy kubernetes-dashboard.yaml 
+  copy:
+    src: "{{ role_path }}/files/kubernetes-dashboard.yaml"
+    dest: /root/kubernetes-dashboard.yaml 
+
+- name: Install dashboard
+  command: kubectl apply -f /root/kubernetes-dashboard.yaml 

@@ -1,0 +1,20 @@
+---
+- name: Join cluster
+  shell: "{{ hostvars['K8S_HOLDER']['command'] }}"
+
+- name: Change Kubelet readonly port
+  lineinfile:
+    path: /var/lib/kubelet/config.yaml
+    line: 'readOnlyPort: 10255'
+
+- name: Replace api address
+  replace:
+    path: /etc/kubernetes/kubelet.conf
+    regexp: '.*server.*'
+    replace: '    server: https://{{ api_address }}:6443'
+
+- name: Restart Kubelet
+  systemd:
+    state: restarted
+    name: kubelet
+

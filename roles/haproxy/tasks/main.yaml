@@ -1,0 +1,19 @@
+- name: Install haproxy
+  yum:
+    name: haproxy
+    state: present
+
+- name: Copy haproxy.cfg
+  template:
+    src: "{{ role_path }}/templates/haproxy.cfg"
+    dest: /etc/haproxy/haproxy.cfg
+
+- name: Restart haproxy
+  systemd:
+    state: restarted
+    name: haproxy
+
+- name: Enable haproxy
+  systemd:
+    name: haproxy
+    enabled: yes

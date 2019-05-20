@@ -6,23 +6,6 @@ metadata:
 data:
   ca.pem: |
     -----BEGIN CERTIFICATE-----
-    MIIDFjCCAf6gAwIBAgIJAP2kT/jemKFVMA0GCSqGSIb3DQEBCwUAMCAxHjAcBgNV
-    BAMMFWRleC5rOHMuc2hvdC54MzQwLm9yZzAeFw0xODEyMjYxMTA0MThaFw0yODEy
-    MjMxMTA0MThaMCAxHjAcBgNVBAMMFWRleC5rOHMuc2hvdC54MzQwLm9yZzCCASIw
-    DQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALGVCOrJpaE1ghYivEi2SvQ3bLb8
-    QjFsSgnzNg0+K85Sn84C1E3UAW+bK0f7Dp/4+R4o2GvkvjnHZsYA6g8fQTcGZXWp
-    D6eiw4iSl+/bEKnCDuWniKgEHKxdL+a0eZcJhR+XCWTLJmcHHKJeGTJEoIfYBq7a
-    HhIJDkwXeXwTePbssZltKZw/yqNX+5MDtEGD2anaSkn1oDXOCjA/uRD6pQKGKUyM
-    GNXHVj9jXGqEcQa99KiNKLqxBV6xDcOkKYFJcq4LICJTLioLU+o1x6CFUBx4wi64
-    Q/+hBDku+GJcyzTYyqJwKIfsL1w4fw1qFo6/r7UGZjVG6PJmgKigJMBVhFkCAwEA
-    AaNTMFEwHQYDVR0OBBYEFBYMoeIbIw8r5ew0ZwoRFW9pnrIjMB8GA1UdIwQYMBaA
-    FBYMoeIbIw8r5ew0ZwoRFW9pnrIjMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcN
-    AQELBQADggEBADHG0GlBw0CQbxaWnyLAdPNl1dooy413N4wsLELs6U3wsg0RTWgw
-    z2H1Z/PW8ZOEMlosJdaqoogUquds0cK6kIqXb8okhvK40aBFAEaMMb5AXF8CL3LO
-    D6md3TYclrVXZL0dH6idDPunA0BB31K1rmjDkboSYtMe0uj0/guxjal8InUvCVoP
-    iiu5IAmck6yrtyGU3L+BMZHOmS2EmanK9g26O672m01i6olNPtnxXWQai8x3xeYC
-    51PRusN8O/48XiSeG+yPhZ4iV6iwqFwztTXDkBKP8xRcluJnX83WodkAR3yYkHm5
-    cqB5A6u7v/F+CyuLrpYCN79UAG/IrUDNdH0=
     -----END CERTIFICATE-----
 ---
 kind: ConfigMap
@@ -35,9 +18,9 @@ data:
     debug: false
     client_id: "loginapp"
     client_secret: 4TORGiNV9M54BTk1v7dNuFSaI6hUjfjr
-    issuer_url: "https://dex.k8s.shot.x340.org:32000/dex"
+    issuer_url: "https://dex.k8s.test.com:32000/dex"
     issuer_root_ca: "/etc/ssl/ca.pem"
-    redirect_url: "https://login.k8s.shot.x340.org:32002/callback"
+    redirect_url: "https://login.k8s.test.com:32002/callback"
     listen: "https://0.0.0.0:5555"
     tls_cert: "/etc/loginapp/tls/tls.crt"
     tls_key: "/etc/loginapp/tls/tls.key"
@@ -108,7 +91,7 @@ spec:
                 path: config.yaml
         - name: tls
           secret:
-            secretName: dex.k8s.shot.x340.org.tls
+            secretName: dex.k8s.test.com.tls
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -162,7 +145,7 @@ metadata:
   namespace: kube-system
 data:
   config.yaml: |
-    issuer: https://dex.k8s.shot.x340.org:32000/dex
+    issuer: https://dex.k8s.test.com:32000/dex
     storage:
       type: kubernetes
       config:
@@ -189,7 +172,7 @@ data:
           # If the port is not supplied, it will be guessed based on "insecureNoSSL",
           # and "startTLS" flags. 389 for insecure or StartTLS connections, 636
           # otherwise.
-          host: ldap-ds01.x340.org:636
+          host: ldap-ds01.test.com:636
 
           # Following field is required if the LDAP host is not using TLS (port 389).
           # Because this option inherently leaks passwords to anyone on the same network
@@ -221,7 +204,7 @@ data:
           userSearch:
             # BaseDN to start the search from. It will translate to the query
             # "(&(objectClass=person)(uid=<username>))".
-            baseDN: o=profiru
+            baseDN: o=test
             # Optional filter to apply when searching the directory.
             # filter: "(objectClass=person)"
             # username attribute used for comparing user entries. This will be translated
@@ -239,7 +222,7 @@ data:
           groupSearch:
             # BaseDN to start the search from. It will translate to the query
             # "(&(objectClass=group)(member=<user uid>))".
-            baseDN: o=profiru
+            baseDN: o=test
             # Optional filter to apply when searching the directory.
             # filter: "(objectClass=group)"
             # Following two fields are used to match a user to a group. It adds an additional
@@ -255,7 +238,7 @@ data:
     staticClients:
     - id: loginapp
       redirectURIs:
-      - 'https://login.k8s.shot.x340.org:32002/callback'
+      - 'https://login.k8s.test.com:32002/callback'
       name: 'Login Application'
       secret: 4TORGiNV9M54BTk1v7dNuFSaI6hUjfjr
 ---
@@ -318,4 +301,4 @@ spec:
                 path: config.yaml
         - name: tls
           secret:
-            secretName: dex.k8s.shot.x340.org.tls
+            secretName: dex.k8s.test.com.tls

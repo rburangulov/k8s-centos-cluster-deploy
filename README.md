@@ -1,6 +1,6 @@
-Скрипт create_cluster.yml используется для развертывания кластера Kubernetes на Centos 7. В качестве менеджера виртуальной сети используется Weavenet. В качестве балансера Traefik Ingress контроллер.
+create_cluster.yml playbook is user for deploying Kubernetes cluster to Centos 7. Weavenet network plugin is used. Traefik Ingress contoller.
 
-Пример файла hosts:
+hosts file example:
 
 [masters]  
 k8s-master-4-1 ansible_host=192.168.0.1  
@@ -18,24 +18,17 @@ k8s_version=1.12.2-0
 docker_version=docker-ce-18.06.1.ce-3.el7  
 api_address=192.168.0.10 
 
-Для развертывания на ноде балансера необходимо проставить необходимый тэг на ноде. Пример:
+You need to label node for balancer deployng:
 
 kubectl label node dev-k8s-balancer1 balancer=present
 
-Для того, чтобы запретить разворачиванию на ноде других контейнеров, кроме балансера используйте следующую команду:
-
 kubectl taint nodes dev-k8s-balancer1 type=balancer:NoSchedule
 
-Отмена предыдущей команды:
+To cancel previous command:
 
 kubectl taint nodes dev-k8s-balancer1 type:NoSchedule-
 
-Для развертывания на ноде некоторых сервисов необходимо проставить необходимый тэг на ноде. Примеры тегов:
-
-kubectl label node dev-k8s-balancer1 dashboard=present
-
-
-Для LDAP авторизации необходимо сгенерировать сертификаты по инструкции:  
+LDAP authorization:  
 
 https://github.com/dexidp/dex/blob/master/Documentation/kubernetes.md
 
